@@ -17,7 +17,7 @@ public class RestMock {
     public ResponseEntity<String> getStaticJSON() throws InterruptedException {
         Thread.sleep(1000 + (long)(Math.random() * 1000));
 
-        String staticJSON = "{\"message\": \"Hey!\"}";
+        String staticJSON = "{\"message1\": \"Hey!\",\"message2\": \"Dude!\"}";
         return ResponseEntity.ok(staticJSON);
     }
 
