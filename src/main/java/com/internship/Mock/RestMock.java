@@ -15,20 +15,17 @@ public class RestMock {
 
     @GetMapping("/get-json")
     public ResponseEntity<String> getStaticJSON() throws InterruptedException {
-        Thread.sleep(1000 + (long)(Math.random() * 1000));
-
         String staticJSON = "{\"message1\": \"Hey!\",\"message2\": \"Dude!\"}";
+
+        Thread.sleep(1000 + (long)(Math.random() * 1000));
         return ResponseEntity.ok(staticJSON);
     }
 
     @PostMapping("/send-json")
-    public ResponseEntity<Map<String, String>> sendJSON(@RequestBody Map<String, String> request) throws InterruptedException {
-        Thread.sleep(1000 + (long)(Math.random() * 1000));
+    public ResponseEntity<Map<String, Object>> sendJSON(@RequestBody Map<String, Object> request) throws InterruptedException {
+        request.put("date", new Date());
 
-        Map<String, String> response = new HashMap<>();
-        response.put("login", request.get("login"));
-        response.put("password", request.get("password"));
-        response.put("date", new Date().toString());
-        return ResponseEntity.ok(response);
+        Thread.sleep(1000 + (long)(Math.random() * 1000));
+        return ResponseEntity.ok(request);
     }
 }
