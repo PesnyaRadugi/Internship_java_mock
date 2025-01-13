@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -21,11 +20,27 @@ public class RestMock {
         return ResponseEntity.ok(staticJSON);
     }
 
+    @GetMapping("/get-json-object")
+    public ResponseEntity<User> getObjectJSON() throws InterruptedException {
+        User createdUser = new User("Kekw", "lol");
+
+        Thread.sleep(1000 + (long)(Math.random() * 1000));
+        return ResponseEntity.ok(createdUser);
+    }
+
     @PostMapping("/send-json")
     public ResponseEntity<Map<String, Object>> sendJSON(@RequestBody Map<String, Object> request) throws InterruptedException {
         request.put("date", new Date());
 
         Thread.sleep(1000 + (long)(Math.random() * 1000));
         return ResponseEntity.ok(request);
+    }
+
+    @PostMapping("/send-json-object")
+    public  ResponseEntity<User> sendObjectJSON(@RequestBody User user) throws InterruptedException {
+        User createdUser = new User(user.login, user.password);
+
+        Thread.sleep(1000 + (long)(Math.random() * 1000));
+        return ResponseEntity.ok(createdUser);
     }
 }
