@@ -25,7 +25,9 @@ public class RestMock {
     @GetMapping("/get-json-object")
     public ResponseEntity<User> getObjectJSON() throws InterruptedException {
         User createdUser = new User("Kekw", "lol");
-        System.out.println(createdUser.toString());
+
+        // Just testing =)
+        // System.out.println(createdUser.toString());
 
         Thread.sleep(1000 + (long)(Math.random() * 1000));
         return ResponseEntity.ok(createdUser);
