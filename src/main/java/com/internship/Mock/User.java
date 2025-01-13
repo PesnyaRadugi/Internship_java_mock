@@ -16,6 +16,10 @@ public class User {
 
     public Date date;
 
+    public User() {
+
+    }
+
     public User(String login, String password) {
         this.login = login;
         this.password = password;
