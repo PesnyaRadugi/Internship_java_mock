@@ -1,6 +1,8 @@
 package com.internship.Mock;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,7 @@ public class RestMock {
     @GetMapping("/get-json-object")
     public ResponseEntity<User> getObjectJSON() throws InterruptedException {
         User createdUser = new User("Kekw", "lol");
+        System.out.println(createdUser.toString());
 
         Thread.sleep(1000 + (long)(Math.random() * 1000));
         return ResponseEntity.ok(createdUser);
@@ -30,6 +33,12 @@ public class RestMock {
 
     @PostMapping("/send-json")
     public ResponseEntity<Map<String, Object>> sendJSON(@RequestBody Map<String, Object> request) throws InterruptedException {
+
+        // Return status code 400
+        if (!request.containsKey("login") || !request.containsKey("password") || request.size() != 2) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Request must contain only 'login' and 'password' fields"));
+        }
+
         request.put("date", new Date());
 
         Thread.sleep(1000 + (long)(Math.random() * 1000));
@@ -37,7 +46,7 @@ public class RestMock {
     }
 
     @PostMapping("/send-json-object")
-    public  ResponseEntity<User> sendObjectJSON(@RequestBody User user) throws InterruptedException {
+    public  ResponseEntity<User> sendObjectJSON(@Valid @RequestBody User user) throws InterruptedException {
         User createdUser = new User(user.login, user.password);
 
         Thread.sleep(1000 + (long)(Math.random() * 1000));
