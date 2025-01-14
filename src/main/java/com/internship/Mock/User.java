@@ -11,7 +11,7 @@ public class User {
     public String login;
 
     @NotBlank(message = "Password can't be empty")
-    @Size(min = 3)
+    @Size(min = 3, message = "Password must be at least 3 characters long")
     public String password;
 
     public Date date;
