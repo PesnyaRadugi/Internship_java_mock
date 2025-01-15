@@ -3,7 +3,9 @@ package com.internship.Mock;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class User {
 
@@ -14,7 +16,7 @@ public class User {
     @Size(min = 3, message = "Password must be at least 3 characters long")
     public String password;
 
-    public Date date;
+    public String date;
 
     public User() {
 
@@ -23,7 +25,7 @@ public class User {
     public User(String login, String password) {
         this.login = login;
         this.password = password;
-        this.date = new Date();
+        this.date = formatDate(ZonedDateTime.now());
     }
 
     @Override
@@ -34,6 +36,13 @@ public class User {
                         "\"date\": \"%s\"}",
                 login, password, date
         );
+    }
+
+    private String formatDate(ZonedDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        ZonedDateTime moscowTime = dateTime.withZoneSameInstant(ZoneId.of("Europe/Moscow"));
+        return moscowTime.format(formatter);
     }
 
 }
