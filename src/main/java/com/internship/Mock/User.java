@@ -17,9 +17,17 @@ public class User {
     public String password;
 
     public String date;
+    public String email;
 
     public User() {
 
+    }
+
+    public  User(String login, String password, String date, String email) {
+        this.login = login;
+        this.password = password;
+        this.date = date;
+        this.email = email;
     }
 
     public User(String login, String password) {
