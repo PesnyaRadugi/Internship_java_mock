@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.Date;
 import java.util.Map;
 
@@ -60,15 +57,16 @@ public class RestMock {
 
     @GetMapping("/user/{login}")
     public ResponseEntity<?> getUser(@PathVariable String login) {
-        String query = "SELECT u.login, u.password, u.date, ue.email " +
-                "FROM users u JOIN user_emails ue ON u.login = ue.login " +
-                "WHERE u.login = ?";
+        String query = "SELECT u.login, u.password, u.date, ue.email FROM users u " +
+                "JOIN user_emails ue ON u.login = ue.login WHERE u.login = ?";
 
+        // Try-with Connection, PrepStatement.
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, login);
 
+            // Try-with RS
             try (ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()) {
                     User user = new User(resultSet.getString("login"),
@@ -86,4 +84,28 @@ public class RestMock {
             throw new RuntimeException("Error trying to get user: " + e.getMessage());
         }
     }
- }
+
+    @PostMapping("/insertUser")
+    public ResponseEntity<?> addUser(@Valid @RequestBody User user) {
+        String query = "INSERT INTO users (login, password, date) VALUES (?, ?, ?);" +
+                "INSERT INTO user_emails (login, email) VALUES (?, ?);";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            //users
+            statement.setString(1, user.login);
+            statement.setString(2, user.password);
+            statement.setTimestamp(3, Timestamp.valueOf(user.date));
+
+            //user_emails
+            statement.setString(4, user.login);
+            statement.setString(5, user.email);
+            int rowsUpdated =statement.executeUpdate();
+
+            return ResponseEntity.ok("Inserted " + rowsUpdated + " rows");
+        } catch (Exception e) {
+            throw new RuntimeException("Error trying to insert user: " + e.getMessage());
+        }
+    }
+}
