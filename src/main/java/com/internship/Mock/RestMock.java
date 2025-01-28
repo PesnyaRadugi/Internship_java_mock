@@ -62,7 +62,6 @@ public class RestMock {
     @GetMapping("/user/{login}")
     public ResponseEntity<?> getUser(@PathVariable String login) {
         try {
-            System.out.println("Here!");
             return ResponseEntity.ok(userRepository.selectUserByLogin(login));
         } catch (SQLException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving user: " + e.getMessage());
