@@ -12,9 +12,11 @@ import java.util.Map;
 @RestController
 public class RestMock {
     private final UserRepository userRepository;
+    private final UsersInFile usersInFile;
 
     public RestMock(UserRepository userRepository) {
         this.userRepository = userRepository;
+        usersInFile = new UsersInFile(userRepository);
     }
 
     @GetMapping("/user/{login}")
@@ -54,6 +56,27 @@ public class RestMock {
             return ResponseEntity.ok("Inserted " + rowsInserted + " rows.");
         } catch (SQLException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect data: " + e.getMessage());
+        }
+    }
+
+    //Files writing/reading
+    @GetMapping("/file/save/{login}")
+    public ResponseEntity<?> addUserToFile(@PathVariable String login) {
+        try {
+            usersInFile.addByLogin(login);
+            return ResponseEntity.ok("User " + login + " was added to file");
+        } catch (SQLException | UserAlreadyExistsException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/file/randomUser")
+    public ResponseEntity<?> getRandomUserFromFile() {
+        try {
+            User randomUser = usersInFile.getRandomUser();
+            return ResponseEntity.ok(randomUser);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 }
