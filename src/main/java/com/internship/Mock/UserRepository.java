@@ -12,23 +12,38 @@ public class UserRepository {
     private static final String PASSWORD = "admin";
 
     public User selectUserByLogin(String login) throws SQLException {
+        User user = null;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
         String query = "SELECT u.login, u.password, u.date, ue.email FROM users u " +
-                "JOIN user_emails ue ON u.login = ue.login WHERE u.login = ?";
+                "JOIN user_emails ue ON u.login = ue.login WHERE u.login = '" + login + "'";
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
 
-            statement.setString(1, login);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return new User(resultSet.getString("login"), resultSet.getString("password"),
-                            resultSet.getString("date"), resultSet.getString("email"));
-                } else {
-                    throw new SQLException("User not found");
-                }
+            if (resultSet.next()) {
+                user = new User(resultSet.getString("login"), resultSet.getString("password"),
+                        resultSet.getString("date"), resultSet.getString("email"));
+            } else {
+                throw new SQLException("User " + login + " not found");
+            }
+        } catch (RuntimeException e) {
+            System.err.println("An error occurred on creating request resources: " + e.getMessage());
+        } finally {
+            try {
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+                if (resultSet != null) resultSet.close();
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
             }
         }
+
+        return user;
     }
 
     public int insertUser(User user) throws SQLException{

@@ -16,7 +16,10 @@ public class User {
     @Size(min = 3, message = "Password must be at least 3 characters long")
     public String password;
 
+    @NotBlank(message = "Date can't be empty")
     public String date;
+
+    @NotBlank(message = "Email can't be empty")
     public String email;
 
     public User() {
