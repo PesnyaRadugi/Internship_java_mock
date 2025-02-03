@@ -1,6 +1,7 @@
 package com.internship.Mock.Repositories;
 
 import com.internship.Mock.Models.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -8,9 +9,12 @@ import java.sql.*;
 @Repository
 public class UserRepository {
 
-    private static final String URL = "jdbc:postgresql://192.168.0.104:5432/exampledb";
-    private static final String USER = "admin";
-    private static final String PASSWORD = "admin";
+    @Value("${db.url}")
+    private String url;
+    @Value("${db.user}")
+    private String user;
+    @Value("${db.password}")
+    private String password;
 
     public User selectUserByLogin(String login) throws SQLException {
         User user = null;
@@ -22,7 +26,7 @@ public class UserRepository {
                 "JOIN user_emails ue ON u.login = ue.login WHERE u.login = '" + login + "'";
 
         try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            connection = DriverManager.getConnection(url, this.user, password);
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
 
@@ -51,7 +55,7 @@ public class UserRepository {
         String query = "INSERT INTO users (login, password, date) VALUES (?, ?, ?);" +
                 "INSERT INTO user_emails (login, email) VALUES (?, ?);";
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = DriverManager.getConnection(url, this.user, password);
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             //users

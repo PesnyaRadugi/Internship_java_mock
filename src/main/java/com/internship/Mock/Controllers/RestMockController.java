@@ -5,6 +5,7 @@ import com.internship.Mock.UserAlreadyExistsException;
 import com.internship.Mock.Repositories.UserRepository;
 import com.internship.Mock.Services.UsersInFile;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,10 @@ import java.util.Map;
 
 @RestController
 public class RestMockController {
-    private final UserRepository userRepository;
-    private final UsersInFile usersInFile;
-
-    public RestMockController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        usersInFile = new UsersInFile(userRepository);
-    }
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UsersInFile usersInFile;
 
     @GetMapping("/user/{login}")
     public ResponseEntity<?> getUser(@PathVariable String login) {
@@ -67,7 +65,8 @@ public class RestMockController {
     @GetMapping("/file/save/{login}")
     public ResponseEntity<?> addUserToFile(@PathVariable String login) {
         try {
-            usersInFile.addByLogin(login);
+            User user = userRepository.selectUserByLogin(login);
+            usersInFile.addUser(user);
             return ResponseEntity.ok("User " + login + " was added to file");
         } catch (SQLException | UserAlreadyExistsException e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
