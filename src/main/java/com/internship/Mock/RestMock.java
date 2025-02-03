@@ -1,6 +1,7 @@
 package com.internship.Mock;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,8 @@ import java.util.Map;
 
 @RestController
 public class RestMock {
-    private final UserRepository userRepository;
-
-    public RestMock(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/user/{login}")
     public ResponseEntity<?> getUser(@PathVariable String login) {
