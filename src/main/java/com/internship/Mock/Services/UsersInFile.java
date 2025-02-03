@@ -3,19 +3,21 @@ package com.internship.Mock.Services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internship.Mock.Models.User;
 import com.internship.Mock.UserAlreadyExistsException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Random;
 
 @Service
 public class UsersInFile {
-    private final String file_path = "users.txt";
+    @Value("${file.users}")
+    private String file_path;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Random random = new Random();
 
@@ -30,9 +32,17 @@ public class UsersInFile {
     }
 
     public User getRandomUser() {
-        try {
-            List<String> lines = Files.readAllLines(Path.of(file_path));
-            String randomLine = lines.get(random.nextInt(lines.size()));
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(file_path))) {
+            int targetIndex = random.nextInt(10);
+            String randomLine = null;
+
+            for (int i = 0; i <= targetIndex; i++) {
+                randomLine = reader.readLine();
+                if (randomLine == null) {
+                    throw new RuntimeException("File has less than " + (targetIndex + 1) + " lines");
+                }
+            }
+
             return objectMapper.readValue(randomLine, User.class);
         } catch (IOException e) {
             throw new RuntimeException("Error reading file: " + e.getMessage());
