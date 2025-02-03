@@ -1,5 +1,6 @@
-package com.internship.Mock;
+package com.internship.Mock.Repositories;
 
+import com.internship.Mock.Models.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 

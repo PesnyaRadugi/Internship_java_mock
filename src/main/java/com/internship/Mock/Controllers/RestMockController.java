@@ -1,5 +1,7 @@
-package com.internship.Mock;
+package com.internship.Mock.Controllers;
 
+import com.internship.Mock.Models.User;
+import com.internship.Mock.Repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +13,7 @@ import java.sql.*;
 import java.util.Map;
 
 @RestController
-public class RestMock {
+public class RestMockController {
     @Autowired
     private UserRepository userRepository;
 
