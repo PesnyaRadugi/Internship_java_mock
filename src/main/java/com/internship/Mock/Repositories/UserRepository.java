@@ -1,5 +1,6 @@
-package com.internship.Mock;
+package com.internship.Mock.Repositories;
 
+import com.internship.Mock.Models.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

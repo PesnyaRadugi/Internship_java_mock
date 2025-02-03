@@ -1,5 +1,9 @@
-package com.internship.Mock;
+package com.internship.Mock.Controllers;
 
+import com.internship.Mock.Models.User;
+import com.internship.Mock.UserAlreadyExistsException;
+import com.internship.Mock.Repositories.UserRepository;
+import com.internship.Mock.Services.UsersInFile;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +14,11 @@ import java.sql.*;
 import java.util.Map;
 
 @RestController
-public class RestMock {
+public class RestMockController {
     private final UserRepository userRepository;
     private final UsersInFile usersInFile;
 
-    public RestMock(UserRepository userRepository) {
+    public RestMockController(UserRepository userRepository) {
         this.userRepository = userRepository;
         usersInFile = new UsersInFile(userRepository);
     }

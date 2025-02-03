@@ -1,11 +1,10 @@
-package com.internship.Mock;
+package com.internship.Mock.Services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.ResponseEntity;
+import com.internship.Mock.Models.User;
+import com.internship.Mock.UserAlreadyExistsException;
+import com.internship.Mock.Repositories.UserRepository;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
