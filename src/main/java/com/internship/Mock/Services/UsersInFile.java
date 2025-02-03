@@ -36,11 +36,10 @@ public class UsersInFile {
             int targetIndex = random.nextInt(10);
             String randomLine = null;
 
-            for (int i = 0; i <= targetIndex; i++) {
-                randomLine = reader.readLine();
-                if (randomLine == null) {
-                    throw new RuntimeException("File has less than " + (targetIndex + 1) + " lines");
-                }
+            for (int i = 0; i <= targetIndex; i++) randomLine = reader.readLine();
+
+            if (randomLine == null) {
+                throw new RuntimeException("Index out of bounds: " + (targetIndex + 1));
             }
 
             return objectMapper.readValue(randomLine, User.class);
